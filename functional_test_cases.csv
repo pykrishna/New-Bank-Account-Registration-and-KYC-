@@ -1,0 +1,465 @@
+Test ID,Test Case Name,Module,Priority,Preconditions,Test Steps,Test Data,Expected Result,Status,Notes
+TC001,User Registration - Valid Data,Registration,High,No existing account,1. Navigate to Registration page
+2. Fill all mandatory fields with valid data
+3. Click Submit,Username: testuser1
+Email: test1@example.com
+Password: Test@123
+First Name: John
+Last Name: Doe
+DOB: 1990-01-01
+Phone: 9876543210
+PAN: ABCDE1234F
+Address: 123 Main St
+City: Mumbai
+Pincode: 400001,User account created successfully
+Redirected to Login page
+Success message displayed,Pending,
+TC002,User Registration - Duplicate Username,Registration,High,User with username 'testuser1' exists,1. Navigate to Registration page
+2. Enter existing username
+3. Fill other fields
+4. Click Submit,Username: testuser1 (existing)
+Email: newemail@example.com,Error message: "Username already exists"
+Registration fails,Pending,
+TC003,User Registration - Duplicate Email,Registration,High,User with email 'test1@example.com' exists,1. Navigate to Registration page
+2. Enter existing email
+3. Fill other fields
+4. Click Submit,Email: test1@example.com (existing)
+Username: newuser,Error message: "Email already registered"
+Registration fails,Pending,
+TC004,User Registration - Duplicate PAN,Registration,High,User with PAN 'ABCDE1234F' exists,1. Navigate to Registration page
+2. Enter existing PAN number
+3. Fill other fields
+4. Click Submit,PAN: ABCDE1234F (existing),Error message: "PAN already registered"
+Registration fails,Pending,
+TC005,User Registration - Duplicate Aadhar,Registration,High,User with Aadhar '123456789012' exists,1. Navigate to Registration page
+2. Enter existing Aadhar number
+3. Fill other fields
+4. Click Submit,Aadhar: 123456789012 (existing),Error message: "Aadhar already registered"
+Registration fails,Pending,
+TC006,User Registration - Missing Mandatory Fields,Registration,Medium,No existing account,1. Navigate to Registration page
+2. Leave mandatory fields empty
+3. Click Submit,Username: (empty)
+Email: (empty)
+Password: (empty),Validation error messages displayed
+Registration fails,Pending,
+TC007,User Login - Valid Credentials,Authentication,High,Valid user account exists,1. Navigate to Login page
+2. Enter valid username/email and password
+3. Click Login,Username: testuser1
+Password: Test@123,Login successful
+Redirected to Dashboard or KYC Portal (if first login)
+Session created,Pending,
+TC008,User Login - Invalid Username,Authentication,High,No account with username,1. Navigate to Login page
+2. Enter invalid username
+3. Enter any password
+4. Click Login,Username: invaliduser
+Password: Test@123,Error message: "Invalid credentials"
+Login fails,Pending,
+TC009,User Login - Invalid Password,Authentication,High,Valid user account exists,1. Navigate to Login page
+2. Enter valid username
+3. Enter wrong password
+4. Click Login,Username: testuser1
+Password: WrongPass123,Error message: "Invalid credentials"
+Login fails,Pending,
+TC010,First Login - Redirect to KYC Portal,Authentication,High,New user account (first login),1. Login with new user credentials
+2. Check redirect,Username: newuser
+Password: Test@123,Automatically redirected to KYC Portal
+Cannot access Dashboard until KYC complete,Pending,
+TC011,Subsequent Login - Access Dashboard,Authentication,High,User with completed KYC,1. Login with existing user
+2. Check redirect,Username: existinguser
+Password: Test@123,Redirected to Dashboard
+Can view application status,Pending,
+TC012,Photo Upload - Camera Capture,KYC Portal,High,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Click "Take Photo" button
+3. Allow camera access
+4. Capture photo
+5. Click Submit,Photo captured from camera,Photo uploaded successfully
+Face detected in photo
+Photo saved to database,Pending,
+TC013,Photo Upload - File Upload,KYC Portal,High,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Click "Upload Photo" button
+3. Select image file
+4. Click Submit,Photo file: passport_photo.jpg (valid image),Photo uploaded successfully
+Photo saved to database,Pending,
+TC014,Photo Upload - Invalid File Format,KYC Portal,Medium,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Click "Upload Photo" button
+3. Select non-image file
+4. Click Submit,File: document.pdf (wrong format),Error message: "Invalid file format"
+Upload fails,Pending,
+TC015,Photo Upload - File Too Large,KYC Portal,Medium,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Click "Upload Photo" button
+3. Select large image file (>10MB)
+4. Click Submit,File: large_photo.jpg (15MB),Error message: "File too large"
+Upload fails,Pending,
+TC016,Photo Upload - No Face Detected,KYC Portal,High,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Upload photo without face
+3. Submit,Photo: landscape_image.jpg (no face),Warning: "No face detected"
+May still allow upload but validation will fail,Pending,
+TC017,PAN Card Upload - Valid Document,KYC Portal,High,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Select "PAN Card" as document type
+3. Upload PAN card image
+4. Submit,PAN image: pan_card.jpg (valid PAN),Document uploaded successfully
+OCR extracts PAN number
+OCR extracts name
+Validation score calculated,Pending,
+TC018,PAN Card Upload - Invalid Format,KYC Portal,High,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Select "PAN Card" as document type
+3. Upload invalid PAN format
+4. Submit,PAN image: invalid_pan.jpg (wrong format),OCR validation fails
+PAN number not extracted
+Low confidence score,Pending,
+TC019,Aadhar Card Upload - Valid Document,KYC Portal,High,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Select "Aadhar Card" as document type
+3. Upload Aadhar card image
+4. Submit,Aadhar image: aadhar_card.jpg (valid),Document uploaded successfully
+OCR extracts Aadhar number
+OCR extracts name
+Validation score calculated,Pending,
+TC020,Document Upload - Blurry Image,KYC Portal,Medium,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Upload blurry document image
+3. Submit,Document: blurry_doc.jpg (low quality),OCR confidence low
+Quality score deducted
+May still pass if other validations good,Pending,
+TC021,Document Upload - Low Resolution,KYC Portal,Medium,User logged in and in KYC Portal,1. Navigate to KYC Portal
+2. Upload low resolution document
+3. Submit,Document: low_res.jpg (<30K pixels),Quality score deducted
+May trigger rejection if too low,Pending,
+TC022,KYC Submission - All Documents Valid,KYC Portal,High,User uploaded photo and ID document,1. Complete photo upload
+2. Complete ID document upload
+3. Click "Submit KYC Application",Photo: valid_photo.jpg
+ID: valid_pan.jpg,Application submitted successfully
+Validation process starts
+Status: "submitted",Pending,
+TC023,KYC Validation - Face Detection Pass,AI Validation,High,KYC application submitted with valid photo,1. Submit KYC with photo containing face
+2. Wait for validation,Photo with clear face,Face detected: True
+Confidence: >90%
+Photo score: High,Pending,
+TC024,KYC Validation - Face Detection Fail,AI Validation,High,KYC application submitted with invalid photo,1. Submit KYC with photo without face
+2. Wait for validation,Photo without face,Face detected: False
+Confidence: 0%
+Photo score: 0
+Critical issue flagged,Pending,
+TC025,KYC Validation - Liveness Detection Pass,AI Validation,High,KYC application submitted with live photo,1. Submit KYC with live camera photo
+2. Wait for validation,Live camera photo,Liveness: True
+Liveness score: >70%
+Photo score: High,Pending,
+TC026,KYC Validation - Liveness Detection Fail,AI Validation,High,KYC application submitted with printed photo,1. Submit KYC with printed/screen photo
+2. Wait for validation,Printed photo,Liveness: False
+Liveness score: <50%
+Photo score: Deducted,Pending,
+TC027,KYC Validation - Face Matching Pass,AI Validation,Critical,KYC application with matching faces,1. Submit KYC with photo matching ID document photo
+2. Wait for validation,Photo face matches ID photo,Face match: True
+Similarity: >60%
+Validation continues,Pending,
+TC028,KYC Validation - Face Matching Fail,AI Validation,Critical,KYC application with non-matching faces,1. Submit KYC with photo not matching ID document photo
+2. Wait for validation,Photo face doesn't match ID photo,Face match: False
+Similarity: <60%
+Critical issue: Auto-reject,Pending,
+TC029,KYC Validation - Document Type Match,AI Validation,High,KYC application with correct document type,1. User selects PAN
+2. Uploads PAN card
+3. Submit,Selected: PAN
+Uploaded: PAN card,Document type detected: PAN
+Type match: True
+Validation continues,Pending,
+TC030,KYC Validation - Document Type Mismatch,AI Validation,Critical,KYC application with wrong document type,1. User selects PAN
+2. Uploads Aadhar card
+3. Submit,Selected: PAN
+Uploaded: Aadhar,Document type detected: Aadhar
+Type match: False
+Critical issue: Auto-reject,Pending,
+TC031,KYC Validation - OCR Extraction Success,AI Validation,High,KYC application with clear document,1. Submit KYC with clear PAN/Aadhar
+2. Wait for OCR processing,Clear document image,OCR extracts: PAN/Aadhar number
+OCR extracts: Name
+Confidence: >70%
+Validation continues,Pending,
+TC032,KYC Validation - OCR Extraction Fail,AI Validation,High,KYC application with unreadable document,1. Submit KYC with blurry/unreadable document
+2. Wait for OCR processing,Unreadable document,OCR confidence: <50%
+Critical issue: Auto-reject
+Validation fails,Pending,
+TC033,KYC Validation - Overall Score Calculation,AI Validation,High,Complete KYC application submitted,1. Submit KYC with all valid documents
+2. Wait for validation,All validations pass,Photo: 90% (40% weight)
+Address: 85% (15% weight)
+ID Doc: 95% (30% weight)
+Photo Doc: 90% (15% weight)
+Overall: >70%,Pending,
+TC034,KYC Validation - Approval,AI Validation,Critical,Complete KYC application with high scores,1. Submit KYC with all validations passing
+2. Wait for validation,Overall score: >70%
+No critical issues,Application status: "approved"
+Customer KYC status: "Approved"
+Documents: "verified"
+Notification sent,Pending,
+TC035,KYC Validation - Rejection - Low Score,AI Validation,Critical,Complete KYC application with low scores,1. Submit KYC with poor quality documents
+2. Wait for validation,Overall score: <70%,Application status: "rejected"
+Customer KYC status: "Rejected"
+Rejection reason stored
+Notification sent,Pending,
+TC036,KYC Validation - Rejection - Critical Issue,AI Validation,Critical,KYC application with critical issue,1. Submit KYC with face mismatch or type mismatch
+2. Wait for validation,Critical issue present,Application status: "rejected"
+Rejection reason: Critical issue details
+Auto-rejected immediately,Pending,
+TC037,Status Check - By Email,Status Check,High,Application exists with email,1. Navigate to Status Check page
+2. Enter email address
+3. Click Check,Email: test1@example.com,Status displayed
+Application details shown
+Document status shown,Pending,
+TC038,Status Check - By Phone,Status Check,High,Application exists with phone,1. Navigate to Status Check page
+2. Enter phone number
+3. Click Check,Phone: 9876543210,Status displayed
+Application details shown
+Document status shown,Pending,
+TC039,Status Check - Not Found,Status Check,Medium,No application with identifier,1. Navigate to Status Check page
+2. Enter non-existent email/phone
+3. Click Check,Email: notfound@example.com,Status: "A" (No account found)
+Message: "No account found with these details",Pending,
+TC040,Status Check - Not Submitted,Status Check,Medium,User exists but no KYC submitted,1. Navigate to Status Check page
+2. Enter email of user without KYC
+3. Click Check,Email: nosubmit@example.com,Status: "C" (Not submitted)
+Message: "KYC not submitted action required",Pending,
+TC041,Status Check - In Progress,Status Check,High,Application in review,1. Navigate to Status Check page
+2. Enter email of user with pending KYC
+3. Click Check,Email: pending@example.com,Status: "D" (In progress)
+Message: "KYC submitted verification in progress",Pending,
+TC042,Status Check - Approved,Status Check,High,Application approved,1. Navigate to Status Check page
+2. Enter email of user with approved KYC
+3. Click Check,Email: approved@example.com,Status: "E" (Approved)
+Message: "KYC Verified Account Fully Active",Pending,
+TC043,Dashboard - View Application Status,Dashboard,High,User logged in with KYC application,1. Login to account
+2. Navigate to Dashboard
+3. View application status,User with submitted KYC,Application status displayed
+Validation score shown
+Document status shown
+Submission date shown,Pending,
+TC044,Dashboard - View Documents,Dashboard,High,User logged in with uploaded documents,1. Login to account
+2. Navigate to Dashboard
+3. View documents section,User with documents,All documents listed
+Verification status per document
+Upload dates shown
+Verification notes shown,Pending,
+TC045,Admin Login - Valid Credentials,Admin,High,Admin account exists,1. Navigate to Admin Login
+2. Enter admin credentials
+3. Click Login,Username: admin
+Password: Admin@123,Login successful
+Redirected to Admin Dashboard
+Admin mode enabled,Pending,
+TC046,Admin Login - Invalid Credentials,Admin,High,No admin account,1. Navigate to Admin Login
+2. Enter invalid credentials
+3. Click Login,Username: fakeadmin
+Password: WrongPass,Error message: "Invalid credentials"
+Login fails,Pending,
+TC047,Admin Dashboard - View Pending Applications,Admin,High,Admin logged in
+Pending applications exist,1. Login as admin
+2. Navigate to Admin Dashboard
+3. View Pending Applications tab,Admin user,List of pending applications displayed
+Customer details shown
+Document counts shown
+Submission dates shown,Pending,
+TC048,Admin Dashboard - View Fraud Alerts,Admin,Medium,Admin logged in
+Rejected applications exist,1. Login as admin
+2. Navigate to Admin Dashboard
+3. View Fraud Alerts tab,Admin user,List of rejected applications
+Rejection reasons shown
+Document rejection counts shown,Pending,
+TC049,Admin Dashboard - System Health,Admin,Low,Admin logged in,1. Login as admin
+2. Navigate to Admin Dashboard
+3. View system metrics,Admin user,Total applications count
+Pending applications count
+Approved count
+Rejected count
+Status breakdown shown,Pending,
+TC050,Admin - Approve Application,Admin,Critical,Admin logged in
+Pending application exists,1. Login as admin
+2. View pending application
+3. Click "Approve" button
+4. Add notes (optional)
+5. Confirm,Application ID: [valid_id]
+Notes: "All documents verified",Application status: "approved"
+Customer KYC status: "Approved"
+All documents: "verified"
+Verification date updated
+Audit log created,Pending,
+TC051,Admin - Reject Application,Admin,Critical,Admin logged in
+Pending application exists,1. Login as admin
+2. View pending application
+3. Click "Reject" button
+4. Enter rejection reason
+5. Confirm,Application ID: [valid_id]
+Reason: "Document quality insufficient",Application status: "rejected"
+Customer KYC status: "Rejected"
+Rejection reason stored
+Audit log created,Pending,
+TC052,Admin - Reject Individual Document,Admin,High,Admin logged in
+Application with multiple documents exists,1. Login as admin
+2. View application with documents
+3. Select specific document
+4. Click "Reject Document"
+5. Enter reason
+6. Confirm,Document ID: [valid_id]
+Reason: "Photo quality poor",Document status: "rejected"
+Application status: "pending_resubmission"
+Customer notified
+Audit log created,Pending,
+TC053,Admin - View Application Details,Admin,High,Admin logged in
+Application exists,1. Login as admin
+2. View application list
+3. Click "View Details",Application ID: [valid_id],Full application details shown
+Customer information displayed
+All documents listed
+Validation scores shown
+Notes displayed,Pending,
+TC054,Audit Reports - View Logs,Audit Reports,Medium,Admin logged in
+Audit logs exist,1. Login as admin
+2. Navigate to Audit Reports
+3. Select date range
+4. View logs,Date range: Last 30 days,Audit logs displayed in table
+All actions listed
+User information shown
+Timestamps shown,Pending,
+TC055,Audit Reports - Export CSV,Audit Reports,Low,Admin logged in
+Audit logs exist,1. Login as admin
+2. Navigate to Audit Reports
+3. Select date range
+4. Click "Download CSV",Date range: Last 30 days,CSV file downloaded
+Contains all audit log data
+Properly formatted,Pending,
+TC056,Audit Reports - Export Excel,Audit Reports,Low,Admin logged in
+Audit logs exist,1. Login as admin
+2. Navigate to Audit Reports
+3. Select date range
+4. Click "Download Excel",Date range: Last 30 days,Excel file downloaded
+Contains all audit log data
+Properly formatted,Pending,
+TC057,Audit Reports - Filter by Action Type,Audit Reports,Low,Admin logged in
+Audit logs exist,1. Login as admin
+2. Navigate to Audit Reports
+3. Select action type filter
+4. View logs,Action type: "application_approve",Only approval actions shown
+Filtered results displayed,Pending,
+TC058,Address Validation - Complete Address,Validation,High,KYC application with complete address,1. Submit KYC with complete address
+2. Wait for validation,Address: "123 Main St"
+City: "Mumbai"
+Pincode: "400001",Address score: High
+Validation passes,Pending,
+TC059,Address Validation - Missing City,Validation,Medium,KYC application with missing city,1. Submit KYC without city
+2. Wait for validation,Address: "123 Main St"
+City: (empty)
+Pincode: "400001",Address score: Deducted
+Warning: "City missing"
+May still pass if other validations good,Pending,
+TC060,Address Validation - OCR Address Match,Validation,High,KYC application with matching addresses,1. Submit KYC with address matching document OCR
+2. Wait for validation,Form address: "123 Main St"
+OCR address: "123 Main St",Address match: True
+Score: High,Pending,
+TC061,Address Validation - OCR Address Mismatch,Validation,Medium,KYC application with mismatched addresses,1. Submit KYC with address not matching document OCR
+2. Wait for validation,Form address: "123 Main St"
+OCR address: "456 Park Ave",Address match: False
+Score: Deducted
+Warning shown,Pending,
+TC062,Document Validation - File Size Valid,Validation,Medium,Document upload,1. Upload document with valid file size
+2. Submit,File size: 2MB,File accepted
+Validation continues,Pending,
+TC063,Document Validation - File Size Too Large,Validation,Medium,Document upload,1. Upload document exceeding size limit
+2. Submit,File size: 15MB (>10MB limit),Error: "File too large"
+Upload rejected,Pending,
+TC064,Document Validation - File Size Too Small,Validation,Medium,Document upload,1. Upload very small file (possibly corrupted)
+2. Submit,File size: 500 bytes,Warning: "File too small"
+May be rejected as corrupted,Pending,
+TC065,Image Quality - Brightness Optimal,Validation,Low,Photo upload,1. Upload photo with optimal brightness
+2. Validate,Brightness: 100-180 (optimal range),Quality score: High
+No issues,Pending,
+TC066,Image Quality - Brightness Too Dark,Validation,Medium,Photo upload,1. Upload dark photo
+2. Validate,Brightness: <50,Quality score: Deducted
+Issue: "Image too dark",Pending,
+TC067,Image Quality - Brightness Too Bright,Validation,Medium,Photo upload,1. Upload overexposed photo
+2. Validate,Brightness: >220,Quality score: Deducted
+Issue: "Image overexposed",Pending,
+TC068,Image Quality - Low Contrast,Validation,Medium,Photo upload,1. Upload low contrast photo
+2. Validate,Contrast: <20,Quality score: Deducted
+Issue: "Low contrast",Pending,
+TC069,Image Quality - High Noise,Validation,Low,Photo upload,1. Upload noisy/grainy photo
+2. Validate,Noise level: >1000,Quality score: Deducted
+Issue: "High noise level",Pending,
+TC070,Session Management - Logout,Authentication,High,User logged in,1. Login to account
+2. Click "Logout" button,Logged in user,Session cleared
+Redirected to Landing page
+Cannot access protected pages,Pending,
+TC071,Session Management - Session Timeout,Authentication,Medium,User logged in,1. Login to account
+2. Wait for session timeout (if implemented)
+3. Try to access protected page,Logged in user,Session expired
+Redirected to Login page
+Need to login again,Pending,
+TC072,Error Handling - Database Connection Loss,Error Handling,High,System running,1. Disconnect database
+2. Try to perform any database operation,Any operation,Error message displayed
+Graceful error handling
+User notified,Pending,
+TC073,Error Handling - OCR Service Unavailable,Error Handling,Medium,Document upload,1. Disable Tesseract OCR
+2. Upload document
+3. Submit,Document upload,System uses mock OCR
+Validation continues with reduced confidence
+User notified,Pending,
+TC074,Error Handling - Invalid File Format,Error Handling,Medium,Document upload,1. Upload non-image file as photo
+2. Submit,File: document.pdf,Error: "Invalid file format"
+Upload rejected
+Clear error message,Pending,
+TC075,Performance - Multiple Concurrent Users,Performance,Low,System running,1. Simulate 10 concurrent users
+2. All perform registration/login
+3. Monitor system,10 concurrent users,System handles load
+No crashes
+Reasonable response times,Pending,
+TC076,Performance - Large File Upload,Performance,Low,Document upload,1. Upload large image file (near limit)
+2. Monitor processing time,File: 9MB image,File processed within reasonable time
+No timeout errors,Pending,
+TC077,Security - SQL Injection Prevention,Security,Critical,Any input field,1. Enter SQL injection attempt in any field
+2. Submit,Input: ' OR '1'='1,Input sanitized
+No SQL injection possible
+Query uses parameterized inputs,Pending,
+TC078,Security - Password Hashing,Security,Critical,User registration,1. Register new user
+2. Check database,Password: Test@123,Password stored as hash (SHA-256)
+Plain text password not stored,Pending,
+TC079,Security - XSS Prevention,Security,High,Any text input field,1. Enter XSS script in input field
+2. Submit,Input: <script>alert('XSS')</script>,Script not executed
+Input sanitized
+Safe display,Pending,
+TC080,Data Validation - PAN Format,Validation,High,PAN card upload,1. Upload PAN with valid format
+2. Validate,PAN: ABCDE1234F,Format valid
+Extraction successful,Pending,
+TC081,Data Validation - PAN Format Invalid,Validation,High,PAN card upload,1. Upload PAN with invalid format
+2. Validate,PAN: ABC123 (wrong format),Format invalid
+Extraction fails
+Validation fails,Pending,
+TC082,Data Validation - Aadhar Format,Validation,High,Aadhar card upload,1. Upload Aadhar with valid format
+2. Validate,Aadhar: 1234 5678 9012,Format valid
+Extraction successful,Pending,
+TC083,Data Validation - Aadhar Format Invalid,Validation,High,Aadhar card upload,1. Upload Aadhar with invalid format
+2. Validate,Aadhar: 123456 (wrong format),Format invalid
+Extraction fails
+Validation fails,Pending,
+TC084,Notification - KYC Approved,Notifications,Medium,Application approved,1. KYC application gets approved
+2. Check notifications,Approved application,Notification created
+Customer can view notification
+Status updated,Pending,
+TC085,Notification - KYC Rejected,Notifications,Medium,Application rejected,1. KYC application gets rejected
+2. Check notifications,Rejected application,Notification created
+Rejection reason included
+Customer can view notification,Pending,
+TC086,Data Integrity - Duplicate Prevention,Data Integrity,High,User registration,1. Try to register with duplicate PAN
+2. Try to register with duplicate Aadhar
+3. Try to register with duplicate email,Duplicate data,All duplicates prevented
+Error messages shown
+Data integrity maintained,Pending,
+TC087,Data Integrity - Foreign Key Constraints,Data Integrity,High,Database operations,1. Try to delete user with customer record
+2. Try to delete application with documents,User with customer
+Application with documents,Foreign key constraints prevent deletion
+Data integrity maintained,Pending,
+TC088,Access Control - Unauthorized Admin Access,Access Control,Critical,Regular user logged in,1. Login as regular user
+2. Try to access admin URLs directly,Regular user,Access denied
+Redirected to appropriate page
+Admin features not accessible,Pending,
+TC089,Access Control - Admin Mode Toggle,Access Control,High,Admin user logged in,1. Login as admin
+2. Toggle admin mode on/off
+3. Access admin features,Admin user,Admin mode works correctly
+Can access admin dashboard when enabled
+Cannot access when disabled,Pending,
+TC090,Reporting - Application Status Summary,Reporting,Low,Admin logged in,1. Login as admin
+2. View status summary,Admin user,Status breakdown shown
+Counts per status displayed
+Accurate statistics,Pending,
+
